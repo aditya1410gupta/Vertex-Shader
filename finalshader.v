@@ -8,7 +8,8 @@ module finalshader(
     wire [15:0] pp [15:0]; //Partial Products
     wire [15:0] ps [7:0]; //Partial Sums
     //The entire process is divided into three stages
-    //Stage 1:Multiplication of individual elements
+    
+    //Stage 1:Multiplication of individual elements to get partial products
     fp16mult fm1(.clk(clk),.rst(rst),.a(a[0]),.b(b[0]),.x(pp[0]));
     fp16mult fm2(.clk(clk),.rst(rst),.a(a[1]),.b(b[1]),.x(pp[1]));
     fp16mult fm3(.clk(clk),.rst(rst),.a(a[2]),.b(b[2]),.x(pp[2]));

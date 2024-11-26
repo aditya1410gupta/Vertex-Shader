@@ -1,11 +1,5 @@
 import numpy as np
 import math
-a=[[2.7695 ,  -4.5886,   -5.9392,  -60.0000],
-    [2.5857 ,   8.7379 ,  -5.5451 , -26.6675],
-   [-1.8126 ,        0 ,  -0.8452 ,  -1.0000],
-   [-0.9063  ,       0 ,  -0.4226  ,  2.5000]]
-b=[0.15,0.12,-0.32,1]
-
 def float16decimaltobinary(value):
     if value==0:
         return "0000000000000000"
@@ -61,15 +55,49 @@ def float16binarytodecimal(value):
     if value[0]=='1':
         finalvalue=-finalvalue
     return finalvalue
+def matmul(a,b):
+    c=[0,0,0,0]
+    c[0]=a[0][0]*b[0]+a[0][1]*b[1]+a[0][2]*b[2]+a[0][3]*b[3]
+    c[1]=a[1][0]*b[0]+a[1][1]*b[1]+a[1][2]*b[2]+a[1][3]*b[3]
+    c[2]=a[2][0]*b[0]+a[2][1]*b[1]+a[2][2]*b[2]+a[2][3]*b[3]
+    c[3]=a[3][0]*b[0]+a[3][1]*b[1]+a[3][2]*b[2]+a[3][3]*b[3]
+    return c
+
+a=[[2.7695 ,  -4.5886,   -5.9392,  -60.0000],
+    [2.5857 ,   8.7379 ,  -5.5451 , -26.6675],
+   [-1.8126 ,        0 ,  -0.8452 ,  -1.0000],
+   [-0.9063  ,       0 ,  -0.4226  ,  2.5000]]
 
 lines_to_write=[]
 for i in range(4):
     for j in range(4):
         lines_to_write.append(float16decimaltobinary(a[i][j])+'\n')
-for i in range(4):
-    lines_to_write.append(float16decimaltobinary(b[i])+'\n')
+obtainedoutputs=[]
+expectedoutputs=[]
+with open("teapot.data", "r") as file:
+    for line in file:
+        point=line.strip().split("  ")
+        x=float(point[0])
+        y=float(point[1])
+        z=float(point[2])
+        w=float('1')
+        ox,oy,oz,ow=matmul(a,[x,y,z,w])
+        expectedoutputs.append(str(ox)+'\n')
+        expectedoutputs.append(str(oy)+'\n')
+        expectedoutputs.append(str(oz)+'\n')
+        expectedoutputs.append(str(ow)+'\n')
+        lines_to_write.append(float16decimaltobinary(x)+'\n')
+        lines_to_write.append(float16decimaltobinary(y)+'\n')
+        lines_to_write.append(float16decimaltobinary(z)+'\n')
+        lines_to_write.append(float16decimaltobinary(w)+'\n')
+        
 with open("binarydata.txt", "w") as file: 
     file.writelines(lines_to_write)
 with open("binarydata2.txt", "r") as file: 
     for line in file:
-        print(float16binarytodecimal(line.strip()))
+        obtainedoutputs.append(str(float16binarytodecimal(line.strip()))+'\n')
+with open("obtainedoutputs.txt", "w") as file: 
+    file.writelines(obtainedoutputs)
+with open("expectedoutputs.txt", "w") as file: 
+    file.writelines(expectedoutputs)
+
